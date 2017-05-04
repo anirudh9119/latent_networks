@@ -980,12 +980,11 @@ def build_model(tparams, trparams, options, x, x_mask, r_states, latent_params):
 
 
 
-def ELBOcost(weight_f, kld_cost, kl_rec_cost):
-        vfe_kl_rec = tensor.sum(kl_rec_cost, axis=-1, keepdims=True)
-        #vfe_rec = tensor.sum(rec_cost, axis=-1, keepdims=True)
-        vfe_kld = tensor.sum(kld_cost, axis=-1, keepdims=True)
-        something = theano.function([weight_f, kld_cost, kl_rec_cost], [weight_f * vfe_kld + weight_aux * vfe_kl_rec])
-        return something, weight_f * vfe_kld + weight_aux * vfe_kl_rec
+def ELBOcost(weight, kld_cost, kl_rec_cost):
+        kl_rec = tensor.sum(kl_rec_cost, axis=-1, keepdims=True)
+        kld = tensor.sum(kld_cost, axis=-1, keepdims=True)
+        something = theano.function([weight, kld_cost, kl_rec_cost], [weight * kld + weight_aux * kl_rec])
+        return something, weight * kld + weight_aux * kl_rec
 
 
 
